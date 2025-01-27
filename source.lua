@@ -10,7 +10,7 @@ end
 local function playSound(soundId)
 	local sound = Instance.new("Sound")
 	sound.SoundId = "rbxassetid://" .. soundId
-	sound.Volume = 3 -- Set volume to max (adjust as needed)
+	sound.Volume = 4 -- Set volume to max (adjust as needed)
 	sound.Parent = game.Workspace -- Parent it to Workspace (or anywhere audible)
 	sound:Play()
 	sound.Ended:Connect(function()
@@ -90,23 +90,23 @@ while true do
 
 			Character = Player.Character
 			RootPart = Character.PrimaryPart
-			firetouchinterest(Inst.Parent, RootPart, 1)
-			task.wait()
-			firetouchinterest(Inst.Parent, RootPart, 0)
+			local function TouchPart(part)
+				firetouchinterest(part, RootPart, 1)
+				task.wait()
+				firetouchinterest(part, RootPart, 0)
+			end
+			
+			TouchPart(Inst.Parent)
 
 			for _, Inst2 in pairs(Winpads:GetDescendants()) do
 				if Inst2:IsA("TouchTransmitter") then
-					firetouchinterest(Inst2.Parent, RootPart, 1)
-					task.wait()
-					firetouchinterest(Inst2.Parent, RootPart, 0)
+					TouchPart(Inst2.Parent)
 				end
 			end
-			task.wait(1)
-			firetouchinterest(RestartBrick, RootPart, 1)
-			task.wait(1)
-			firetouchinterest(RestartBrick, RootPart, 0)
+			task.wait(1.5)
+			TouchPart(RestartBrick)
 
-			task.wait(5)
+			task.wait(2)
 		end
 	end
 	
