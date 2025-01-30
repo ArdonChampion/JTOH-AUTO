@@ -1,3 +1,10 @@
+-- SETTINGS
+local TELEPORT_AFTER = 300 -- in seconds
+local DELAY_BETWEEN_TOWERS = 2 -- in seconds
+local SCRIPT_LOADSTRING = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/ArdonChampion/JTOH-AUTO/refs/heads/main/source.lua"))()' -- to chain scripts
+
+
+-- Utils
 local function LookFor(name, class)
 	for i, v in workspace:GetDescendants() do
 		if v.Name == name and v:IsA(class) then
@@ -18,6 +25,23 @@ local function playSound(soundId)
 	end)
 end
 
+local function TouchPart(part, RootPart)
+	local success, _
+	local count = 0
+	while not success do
+		if count >= 1 then
+			warn("Touching part went wrong. ")
+			task.wait(1)
+		end
+		local success, _ = pcall(function()
+			firetouchinterest(part, RootPart, 1)
+			task.wait()
+			firetouchinterest(part, RootPart, 0)
+		end)
+	end
+	
+end
+
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -28,6 +52,62 @@ local TeleportersFolder = game:GetService("Workspace"):WaitForChild("Teleporters
 local RestartBrick = LookFor("RestartBrick", "BasePart")
 local Winpads = LookFor("WinPads", "Folder") --game.Workspace.Misc.WinPads
 local DifficultyChart = LookFor("DifficultyChart", "Model")
+
+
+-- Teleport Related
+local JTOHplaces = {
+	9070657865, -- ring 1
+	9070979698, -- ring 2
+	9070980083, -- ring 3
+	9070980555, -- ring 4
+	9070980846, -- ring 5
+	9070981164, -- ring 6
+	9070981409, -- ring 7
+	9070981722, -- ring 8
+	9070982474, -- ring 9
+	9070975342, -- paradise atoll
+	9071001366, -- zone 2
+	9071001563, -- zone 3
+	9071001883, -- zone 4
+	9071002104, -- zone 5
+	9071002463, -- zone 6
+	9071002677, -- zone 7
+	9071002915, -- zone 8
+	9071004505, -- zone 9
+}
+
+local function GetPlaceId()
+	return game.PlaceId
+end
+
+local function GetNextPlaceId(currentId)
+	local index = table.find(JTOHplaces, currentId)
+	if index then
+		if index == #JTOHplaces then
+			print("No more places left!")
+			return nil
+		end
+		return JTOHplaces[index + 1]
+	end
+	error("Place is not in the list: where the hell are you?")
+end
+
+local function TeleportPlayer(placeId)
+	game:GetService("TeleportService"):TeleportAsync(placeId)
+end
+
+--wrapper
+local function TeleportToNextPlace()
+	-- Add the script to the queue for auto execution
+	local queue = queueonteleport or queue_on_teleport
+	queue(SCRIPT_LOADSTRING)
+
+	local currentId = GetPlaceId()
+	local nextId = GetNextPlaceId(currentId)
+	TeleportPlayer(nextId)
+end
+
+
 
 -- Find Completed Towers
 local completed = {}
@@ -55,7 +135,7 @@ local Boosts = { -- Boost items to use for the tower.
 }
 
 
--- While loop
+-- Give Boost Items Loop
 task.spawn(function()
 	while task.wait() do
 		game.ReplicatedStorage.RequestStatistics.OnClientInvoke = function()
@@ -65,8 +145,17 @@ task.spawn(function()
 end)
 
 
+-- Teleport After X minutes, if the boolean is still true
+local WillTP = true
+task.delay(TELEPORT_AFTER, function()
+	if not WillTP then
+		return
+	end
+	TeleportPlayer()
+end)
 
--- 
+
+-- Main Loop
 task.wait()
 while true do
 	local count = 0
@@ -79,7 +168,7 @@ while true do
 			local Tower_Name = Portal.Name
 			local firstTwo = string.sub(Tower_Name, 1, 2)
 
-			if table.find(completed, Tower_Name) or table.find(SC_Towers, Tower_Name) or (firstTwo ~= "To" and firstTwo ~= "So") then
+			if table.find(completed, Tower_Name) or table.find(SC_Towers, Tower_Name) or string.sub(Tower_Name, -1) == ")" or (firstTwo ~= "To" and firstTwo ~= "So") then
 				warn("Skipped "..Tower_Name)
 				continue
 			else
@@ -90,23 +179,18 @@ while true do
 
 			Character = Player.Character
 			RootPart = Character.PrimaryPart
-			local function TouchPart(part)
-				firetouchinterest(part, RootPart, 1)
-				task.wait()
-				firetouchinterest(part, RootPart, 0)
-			end
 			
-			TouchPart(Inst.Parent)
+			TouchPart(Inst.Parent, RootPart)
 
 			for _, Inst2 in pairs(Winpads:GetDescendants()) do
 				if Inst2:IsA("TouchTransmitter") then
-					TouchPart(Inst2.Parent)
+					TouchPart(Inst2.Parent, RootPart)
 				end
 			end
 			task.wait(1.5)
-			TouchPart(RestartBrick)
+			TouchPart(RestartBrick, RootPart)
 
-			task.wait(2)
+			task.wait(DELAY_BETWEEN_TOWERS)
 		end
 	end
 	
@@ -120,3 +204,8 @@ print("--------- TOWERS COMPLETED ----------")
 print("-------------------------------------")
 
 playSound(3318726694)
+
+
+-- set it false to avoid that delay statement
+WillTP = false
+TeleportPlayer()
