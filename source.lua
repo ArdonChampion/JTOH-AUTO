@@ -1,3 +1,6 @@
+print("ARDON JTOH AUTO")
+print("VERSION 2.01")
+
 -- SETTINGS
 local TELEPORT_AFTER = 300 -- in seconds
 local DELAY_BETWEEN_TOWERS = 2 -- in seconds
@@ -33,7 +36,7 @@ local function TouchPart(part, RootPart)
 			warn("Touching part went wrong. ")
 			task.wait(1)
 		end
-		local success, _ = pcall(function()
+		success, _ = pcall(function()
 			firetouchinterest(part, RootPart, 1)
 			task.wait()
 			firetouchinterest(part, RootPart, 0)
