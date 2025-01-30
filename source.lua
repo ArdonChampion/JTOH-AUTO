@@ -1,5 +1,5 @@
 print("ARDON JTOH AUTO")
-print("VERSION 2.01")
+print("VERSION 2.02")
 
 -- SETTINGS
 local TELEPORT_AFTER = 300 -- in seconds
@@ -48,6 +48,7 @@ end
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
+local plr = Players.LocalPlayer
 
 -- Instances
 local TowerData = ReplicatedStorage:WaitForChild("TowerData")
@@ -55,6 +56,7 @@ local TeleportersFolder = game:GetService("Workspace"):WaitForChild("Teleporters
 local RestartBrick = LookFor("RestartBrick", "BasePart")
 local Winpads = LookFor("WinPads", "Folder") --game.Workspace.Misc.WinPads
 local DifficultyChart = LookFor("DifficultyChart", "Model")
+local UserId = plr.UserId
 
 
 -- Teleport Related
@@ -96,7 +98,7 @@ local function GetNextPlaceId(currentId)
 end
 
 local function TeleportPlayer(placeId)
-	game:GetService("TeleportService"):TeleportAsync(placeId)
+	game:GetService("TeleportService"):TeleportAsync(placeId, UserId)
 end
 
 --wrapper
