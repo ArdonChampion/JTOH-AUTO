@@ -154,7 +154,7 @@ task.delay(TELEPORT_AFTER, function()
 	if not WillTP then
 		return
 	end
-	TeleportPlayer()
+	TeleportToNextPlace()
 end)
 
 
@@ -211,4 +211,4 @@ playSound(3318726694)
 
 -- set it false to avoid that delay statement
 WillTP = false
-TeleportPlayer()
+TeleportToNextPlace()
