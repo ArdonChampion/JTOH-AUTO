@@ -1,5 +1,11 @@
 print("ARDON JTOH AUTO")
-print("VERSION 2.02")
+print("VERSION 2.03")
+
+if getgenv().JTOH_AUTO then
+	warn("JTOH AUTO: Script is already launched!")
+else
+	
+getgetv().JTOH_AUTO = true
 
 -- SETTINGS
 local TELEPORT_AFTER = 300 -- in seconds
@@ -98,7 +104,7 @@ local function GetNextPlaceId(currentId)
 end
 
 local function TeleportPlayer(placeId)
-	game:GetService("TeleportService"):TeleportAsync(placeId, UserId)
+	game:GetService("TeleportService"):Teleport(placeId)
 end
 
 --wrapper
@@ -214,3 +220,5 @@ playSound(3318726694)
 -- set it false to avoid that delay statement
 WillTP = false
 TeleportToNextPlace()
+	
+end
