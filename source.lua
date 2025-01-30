@@ -1,5 +1,5 @@
 print("ARDON JTOH AUTO")
-print("VERSION 2.05")
+print("VERSION 2.06")
 
 if getgenv().JTOH_AUTO then
 	warn("JTOH AUTO: Script is already launched!")
@@ -137,6 +137,11 @@ else
 			end
 		end
 	end
+
+	-- Tower Exceptions
+	local exceptions = {
+		"ToBBB"
+	}
 	
 	-- Player stuff
 	local Player = Players.LocalPlayer
@@ -186,7 +191,7 @@ else
 				local Tower_Name = Portal.Name
 				local firstTwo = string.sub(Tower_Name, 1, 2)
 	
-				if table.find(completed, Tower_Name) or table.find(SC_Towers, Tower_Name) or string.sub(Tower_Name, -1) == ")" or (firstTwo ~= "To" and firstTwo ~= "So") then
+				if table.find(completed, Tower_Name) or table.find(SC_Towers, Tower_Name) or table.find(exceptions, Tower_Name) or string.sub(Tower_Name, -1) == ")" or (firstTwo ~= "To" and firstTwo ~= "So") then
 					warn("Skipped "..Tower_Name)
 					continue
 				else
