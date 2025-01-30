@@ -1,5 +1,5 @@
 print("ARDON JTOH AUTO")
-print("VERSION 2.04")
+print("VERSION 2.05")
 
 if getgenv().JTOH_AUTO then
 	warn("JTOH AUTO: Script is already launched!")
@@ -8,7 +8,7 @@ else
 	getgenv().JTOH_AUTO = true
 	
 	-- SETTINGS
-	local TELEPORT_AFTER = 120 -- in seconds
+	local TELEPORT_AFTER = 150 -- in seconds
 	local DELAY_BETWEEN_TOWERS = 2 -- in seconds
 	local VOLUME_OF_STAGE_COMPLETION = 4
 	local SCRIPT_LOADSTRING = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/ArdonChampion/JTOH-AUTO/refs/heads/main/source.lua"))()' -- to chain scripts
@@ -221,7 +221,7 @@ else
 	print("--------- TOWERS COMPLETED ----------")
 	print("-------------------------------------")
 	
-	playSound(VOLUME_OF_STAGE_COMPLETION)
+	playSound(3318726694, VOLUME_OF_STAGE_COMPLETION)
 	
 	
 	-- set it false to avoid that delay statement
