@@ -5,7 +5,7 @@ if getgenv().JTOH_AUTO then
 	warn("JTOH AUTO: Script is already launched!")
 else
 	
-getgetv().JTOH_AUTO = true
+getgenv().JTOH_AUTO = true
 
 -- SETTINGS
 local TELEPORT_AFTER = 300 -- in seconds
